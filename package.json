@@ -11,6 +11,10 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "db:up": "pnpm --filter @repo/db db:up",
+    "db:migrate": "pnpm --filter @repo/db db:migrate",
+    "db:seed": "pnpm --filter @repo/db db:seed",
     "prepare": "husky"
   },
   "devDependencies": {
