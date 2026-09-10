@@ -3,6 +3,7 @@ import { runMigrations } from "@repo/db/migrate";
 import { projects } from "@repo/db/schema";
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { getProjectService } from "../di";
 import { DrizzleProjectRepository } from "./DrizzleProjectRepository";
 
 let container: StartedPostgreSqlContainer;
@@ -61,7 +62,8 @@ describe("DrizzleProjectRepository", () => {
     const updated = await repo.update(row.id, { name: "Beta" });
     expect(updated?.name).toBe("Beta");
     expect(updated?.description).toBe("old");
-    expect(updated!.updatedAt.getTime()).toBeGreaterThanOrEqual(row.updatedAt.getTime());
+    expect(updated).not.toBeNull();
+    expect(updated?.updatedAt.getTime()).toBeGreaterThanOrEqual(row.updatedAt.getTime());
     expect(await repo.update("00000000-0000-0000-0000-000000000000", { name: "x" })).toBeNull();
   });
 
@@ -69,5 +71,18 @@ describe("DrizzleProjectRepository", () => {
     const row = await repo.insert({ name: "Alpha", description: null, status: "active" });
     expect(await repo.delete(row.id)).toBe(true);
     expect(await repo.delete(row.id)).toBe(false);
+  });
+});
+
+describe("getProjectService (di)", () => {
+  it("wires service to real repository: create → empty-patch update → get → delete", async () => {
+    const svc = getProjectService(db);
+    const created = await svc.create({ name: "Wired", description: null, status: "active" });
+    const unchanged = await svc.update(created.id, {});
+    expect(unchanged).toMatchObject({ id: created.id, name: "Wired" });
+    const fetched = await svc.getById(created.id);
+    expect(fetched.name).toBe("Wired");
+    await svc.delete(created.id);
+    await expect(svc.getById(created.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });

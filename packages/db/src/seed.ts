@@ -7,6 +7,11 @@ const env = parseEnv({
   DATABASE_URL: z.string().default("postgresql://postgres:postgres@localhost:5432/webseed_dev"),
 });
 
+// 씨앗 레포 특성상 그대로 복제됨 — 운영 DB를 향한 실수 한 번을 막는 마지막 가드
+if (process.env.NODE_ENV === "production") {
+  throw new Error("seed is dev-only: refusing to run with NODE_ENV=production");
+}
+
 const SEED_PROJECTS = [
   { name: "Website Redesign", description: "Marketing site refresh", status: "active" as const },
   { name: "Mobile App", description: "iOS/Android companion app", status: "active" as const },
