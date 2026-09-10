@@ -171,7 +171,7 @@ importers:
         version: link:../lib
       drizzle-orm:
         specifier: ^0.44.7
-        version: 0.44.7
+        version: 0.44.7(@types/pg@8.23.1)(pg@8.23.0)
       zod:
         specifier: ^4
         version: 4.5.4
