@@ -6,7 +6,7 @@
 ## 1. 목적과 범위
 
 - **용도**: 실무 웹 애플리케이션 프로젝트의 시작점. clone → 설정 → 도메인 교체로 바로 개발 시작.
-- **포함**: DB(Postgres+Prisma), 인증(better-auth), i18n(ko/en), 예제 페이지 5개, 3층 테스트 인프라, CI, ADR 문서.
+- **포함**: DB(Postgres+Drizzle), 인증(better-auth), i18n(ko/en), 예제 페이지 5개, 3층 테스트 인프라, CI, ADR 문서.
 - **의도적 제외 (YAGNI, README에 명시)**: rate limit, Storybook, Sentry(자리만 주석), 모바일/외부 API 소비자 대응.
 
 ## 2. 기술 스택 (확정)
@@ -18,8 +18,8 @@
 | 프론트 | Next 15 (App Router) + React 19 | |
 | 백엔드 | Fastify + tRPC 어댑터 (별도 서버) | ADR-0002 |
 | API | tRPC (모노레포 타입 공유, 소비자는 웹 프론트뿐) | |
-| 인증 | better-auth (email+password, Prisma adapter) | ADR-0003 |
-| DB | PostgreSQL + Prisma (코드-주인 스키마) | DB-주인 전환법 README 기술 |
+| 인증 | better-auth (email+password, Drizzle adapter) | ADR-0003 |
+| DB | PostgreSQL + Drizzle ORM 단독 (TS 스키마, drizzle-kit 마이그레이션, 코드-주인) | ADR-0007 · DB-주인 전환법 README 기술 |
 | i18n | next-intl(web) + use-intl 코어(api), ICU JSON 공유 | ADR-0004 |
 | UI | shadcn/ui 기반 신규 구축 | Radix + Tailwind |
 | 린트/포맷 | Biome | |
@@ -37,7 +37,7 @@ web-seed/
 ├── packages/
 │   ├── api/        tRPC 라우터 정의 (api=런타임 소비, web=타입만 소비)
 │   ├── features/   도메인 슬라이스 — framework-agnostic
-│   ├── prisma/     스키마 + 마이그레이션 + dev용 docker-compose(Postgres) + 시드(테스트 계정/예제 데이터)
+│   ├── db/         Drizzle 스키마(TS) + drizzle-kit 마이그레이션 + dev용 docker-compose(Postgres) + 시드(테스트 계정/예제 데이터)
 │   ├── ui/         shadcn 기반 공용 컴포넌트
 │   ├── i18n/       ICU MessageFormat JSON (ko/en) — 단일 소스
 │   ├── lib/        공용 유틸 (최하층) + env 검증(zod)
@@ -50,7 +50,7 @@ web-seed/
 **의존 계층 (역방향 import 금지, 문서+리뷰로 강제):**
 
 ```
-lib → prisma → features → api → apps/{web,api}
+lib → db → features → api → apps/{web,api}
 ```
 
 **내부 패키지는 JIT 방식**: 빌드 스텝 없이 TS 소스 직접 export, 소비 앱이 컴파일.
@@ -69,7 +69,7 @@ lib → prisma → features → api → apps/{web,api}
 HTTP → apps/api (Fastify: 호스트 역할만 — env검증/부팅/플러그인)
      → packages/api (tRPC 라우터: zod 파싱, 권한, DTO 반환 — 얇게)
      → features/services (비즈니스 규칙, 도메인 에러 throw)
-     → features/repositories (Prisma 접촉 유일 지점)
+     → features/repositories (Drizzle 접촉 유일 지점)
 ```
 
 ### 에러 처리
@@ -84,7 +84,7 @@ HTTP → apps/api (Fastify: 호스트 역할만 — env검증/부팅/플러그�
 
 ```
 packages/features/projects/
-├── repositories/PrismaProjectRepository.ts   # Prisma는 여기만. select만 사용(include 금지)
+├── repositories/DrizzleProjectRepository.ts  # Drizzle은 여기만. 필요한 컬럼만 select
 ├── services/ProjectService.ts                # constructor 주입
 ├── di.ts                                     # getProjectService() 팩토리 (단순 주입 — 컨테이너 없음)
 ├── dto.ts                                    # zod 스키마 + DTO
@@ -92,9 +92,9 @@ packages/features/projects/
 ```
 
 - **DI 수준**: constructor 주입 + 팩토리 함수. ioctopus류 컨테이너는 도입하지 않음(규모 커지면 재검토).
-- **DTO 경계**: 라우터는 항상 `dto.parse()` 결과만 반환. Prisma 타입이 타입 추론을 타고
+- **DTO 경계**: 라우터는 항상 `dto.parse()` 결과만 반환. DB 스키마 타입이 타입 추론을 타고
   웹으로 새는 것 차단 (agents/rules 1번 규칙).
-- **트랜잭션**: `prisma.$transaction(async (tx) => ...)`의 tx 클라이언트를 repository 메서드에
+- **트랜잭션**: `db.transaction(async (tx) => ...)`의 tx 객체를 repository 메서드에
   주입하는 패턴. 가입(User+Profile 동시 생성) 예제 1개 포함. 상세는 구현 단계에서.
 
 ## 6. 예제 페이지 5개
@@ -114,7 +114,7 @@ packages/features/projects/
 | 층 | 도구 | 예제 |
 |---|---|---|
 | 단위 | vitest (TZ=UTC) | ProjectService + mock repository |
-| 통합 | vitest + testcontainers (Postgres 자동 기동/폐기) | PrismaProjectRepository 실 DB 검증 |
+| 통합 | vitest + testcontainers (Postgres 자동 기동/폐기) | DrizzleProjectRepository 실 DB 검증 |
 | E2E | Playwright | 가입→로그인→CRUD 스모크 1개 |
 
 - mock/실물 repository 교체가 단순 DI의 가치 증명을 겸함.
@@ -130,11 +130,11 @@ packages/features/projects/
 ## 9. 문서
 
 - **docs/adr/**: 0001 pnpm, 0002 Fastify+tRPC 분리 백엔드, 0003 better-auth,
-  0004 next-intl, 0005 JIT 내부 패키지, 0006 코드-주인 스키마.
+  0004 next-intl, 0005 JIT 내부 패키지, 0006 코드-주인 스키마, 0007 Drizzle 단독(Prisma·Kysely 대안 검토와 기각 사유 포함).
   각 장: 배경 / 대안 / 결정 / 트레이드오프.
-- **agents/rules/**: AI 협업용 규칙 (신규 작성): DTO 경계, select-over-include,
+- **agents/rules/**: AI 협업용 규칙 (신규 작성): DTO 경계, 필요 컬럼만 select,
   repository에 비즈니스 로직 금지, 에러 클래스 사용처, i18n 키 추가 전 grep, surgical diff.
-- **README**: quickstart(3명령 이내 기동), 의도적 제외 목록, DB-주인 스키마 전환법(db pull 모드),
+- **README**: quickstart(3명령 이내 기동), 의도적 제외 목록, DB-주인 스키마 전환법(drizzle-kit pull 모드, 대안으로 Kysely+codegen 경로),
   ADR 목록 링크.
 
 ## 10. 배포
@@ -149,4 +149,4 @@ packages/features/projects/
 2. 테스트 계정 시드로 로그인 → 예제 5페이지 전부 동작.
 3. `pnpm test`(단위) / `pnpm test:integration` / `pnpm e2e` 전부 그린.
 4. 새 도메인 추가 절차가 문서 보고 30분 내 가능 (features 슬라이스 복제 → 라우터 등록 → 페이지).
-5. 웹 코드 어디에도 `@repo/prisma` import 없음 (grep으로 검증 가능).
+5. 웹 코드 어디에도 `@repo/db` import 없음 (grep으로 검증 가능).
