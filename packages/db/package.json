@@ -1,0 +1,32 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schema": "./src/schema.ts",
+    "./client": "./src/client.ts",
+    "./migrate": "./src/migrate.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@repo/lib": "workspace:*",
+    "drizzle-orm": "^0.44",
+    "pg": "^8",
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "@types/pg": "^8",
+    "drizzle-kit": "^0.31",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}
