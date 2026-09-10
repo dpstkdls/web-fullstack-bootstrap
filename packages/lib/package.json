@@ -11,6 +11,13 @@
     "type-check": "tsc --noEmit",
     "test": "TZ=UTC vitest run"
   },
-  "dependencies": { "zod": "^4" },
-  "devDependencies": { "@repo/config": "workspace:*", "@types/node": "^22", "typescript": "^5", "vitest": "^3" }
+  "dependencies": {
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "@types/node": "^22",
+    "typescript": "^5",
+    "vitest": "^3"
+  }
 }

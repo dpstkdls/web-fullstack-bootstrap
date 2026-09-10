@@ -9,7 +9,7 @@ export type AppErrorCode =
 export class AppError extends Error {
   constructor(
     readonly code: AppErrorCode,
-    message: string
+    message: string,
   ) {
     super(message);
     this.name = "AppError";
