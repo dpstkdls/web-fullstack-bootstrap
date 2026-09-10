@@ -1,0 +1,16 @@
+{
+  "name": "@repo/lib",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./errors": "./src/errors.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "TZ=UTC vitest run"
+  },
+  "dependencies": { "zod": "^4" },
+  "devDependencies": { "@repo/config": "workspace:*", "@types/node": "^22", "typescript": "^5", "vitest": "^3" }
+}
