@@ -13,7 +13,7 @@
 
 | 영역 | 선택 | 비고 |
 |---|---|---|
-| 패키지 매니저 | pnpm 9 (corepack 고정) | ADR-0001 |
+| 패키지 매니저 | pnpm 12 (corepack 고정) | ADR-0001 |
 | 태스크 러너 | Turborepo | |
 | 프론트 | Next 15 (App Router) + React 19 | |
 | 백엔드 | Fastify + tRPC 어댑터 (별도 서버) | ADR-0002 |
