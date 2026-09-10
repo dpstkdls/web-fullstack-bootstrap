@@ -137,11 +137,13 @@ packages/features/projects/
 - **README**: quickstart(3명령 이내 기동), 의도적 제외 목록, DB-주인 스키마 전환법(drizzle-kit pull 모드, 대안으로 Kysely+codegen 경로),
   ADR 목록 링크.
 
-## 10. 배포
+## 10. 배포 (온프레미스 우선, 특정 클라우드 미전제)
 
-- Dockerfile 2개: apps/web(standalone output), apps/api(tsup 번들).
-- prod용 docker-compose 예시 (web + api + postgres).
-- 특정 클라우드 미전제 — 사내 서버/VM/k8s 어디든.
+| 옵션 | 형태 | 비고 |
+|---|---|---|
+| A. Docker (기본) | Dockerfile 2개(web standalone / api tsup 번들) + prod compose | 폐쇄망은 `docker save/load` 절차 문서 |
+| B. OS 패키지 | `pnpm package:os` → **nfpm**으로 .deb + .rpm 생성 | Docker 불가 서버용. Node 22 런타임 동봉(/opt/web-seed/node), systemd 유닛 2개, /etc/web-seed/env는 conffile로 업그레이드 시 보존. 마이그레이션은 ExecStartPre 또는 `api migrate` 명령 — postinst에서 DB 접속 가정 금지. Postgres는 패키지 미포함(별도 설치/기존 DB 전제) |
+| C. api 단일 바이너리 | Node SEA / bun compile 경로 문서만 | 스크립트는 YAGNI. web은 Next 구조상 단일 바이너리 비실용 — 문서에 사유 명시 |
 
 ## 11. 성공 기준
 
