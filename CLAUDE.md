@@ -5,8 +5,9 @@
 ## 현재 상태
 
 - 설계 스펙 확정: [docs/superpowers/specs/2026-09-10-web-seed-design.md](docs/superpowers/specs/2026-09-10-web-seed-design.md) — 모든 작업의 기준 문서
-- Phase 1 구현 계획 승인됨: [docs/superpowers/plans/2026-09-10-phase1-skeleton.md](docs/superpowers/plans/2026-09-10-phase1-skeleton.md)
-- 구현은 아직 시작 안 함. Phase 2~5 계획은 각 직전 Phase 완료 후 작성
+- Phase 1 (모노레포 골격+툴링) 구현 완료: [docs/superpowers/plans/2026-09-10-phase1-skeleton.md](docs/superpowers/plans/2026-09-10-phase1-skeleton.md)
+- Phase 2 (db+features/projects) 구현 완료: [docs/superpowers/plans/2026-09-10-phase2-db-features.md](docs/superpowers/plans/2026-09-10-phase2-db-features.md)
+- 다음은 Phase 3 (apps/api + tRPC + better-auth). Phase 3~5 계획은 각 직전 Phase 완료 후 작성
 
 ## 핵심 결정 (상세·근거는 스펙과 docs/adr/)
 
