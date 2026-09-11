@@ -6,7 +6,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export function buildAuth(
   db: Db,
-  opts: { secret: string; baseURL: string; trustedOrigins: string[] },
+  opts: { secret: string; baseURL: string; trustedOrigins: string[]; secureCookies: boolean },
 ) {
   return betterAuth({
     database: drizzleAdapter(db, {
@@ -17,6 +17,7 @@ export function buildAuth(
     secret: opts.secret,
     baseURL: opts.baseURL,
     trustedOrigins: opts.trustedOrigins,
+    advanced: { useSecureCookies: opts.secureCookies },
     databaseHooks: {
       user: {
         create: {

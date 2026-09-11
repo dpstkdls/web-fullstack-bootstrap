@@ -37,7 +37,12 @@ beforeAll(async () => {
   container = await new PostgreSqlContainer("postgres:16-alpine").start();
   db = createDb(container.getConnectionUri());
   await runMigrations(db);
-  auth = buildAuth(db, { secret: "test-secret", baseURL: BASE, trustedOrigins: [BASE] });
+  auth = buildAuth(db, {
+    secret: "test-secret",
+    baseURL: BASE,
+    trustedOrigins: [BASE],
+    secureCookies: false,
+  });
   server = await buildServer({ db, auth });
   await server.listen({ port: PORT, host: "127.0.0.1" });
 });

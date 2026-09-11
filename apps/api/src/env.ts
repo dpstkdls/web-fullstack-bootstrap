@@ -8,9 +8,15 @@ export const env = parseEnv({
   BETTER_AUTH_SECRET: z.string().default("dev-secret-change-me"),
   BETTER_AUTH_URL: z.string().default("http://localhost:3001"),
   WEB_ORIGIN: z.string().default("http://localhost:3000"),
+  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
-// dev 기본값은 DX용 — 운영에서 기본 시크릿으로 부팅하는 사고만은 여기서 차단
-if (process.env.NODE_ENV === "production" && env.BETTER_AUTH_SECRET === "dev-secret-change-me") {
-  throw new Error("BETTER_AUTH_SECRET must be set to a real secret in production");
+// dev 기본값은 DX용 — 운영에서 기본 시크릿/짧은 시크릿으로 부팅하는 사고만은 여기서 차단
+if (
+  env.NODE_ENV !== "development" &&
+  (env.BETTER_AUTH_SECRET === "dev-secret-change-me" || env.BETTER_AUTH_SECRET.length < 32)
+) {
+  throw new Error(
+    "BETTER_AUTH_SECRET must be set to a real secret (32+ chars) outside development",
+  );
 }
