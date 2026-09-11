@@ -66,12 +66,19 @@ describe("api server", () => {
       body: JSON.stringify({ email: "it@example.com", password: "password1234", name: "IT" }),
     });
     expect(res.status).toBe(200);
-    cookie = res.headers.get("set-cookie") ?? "";
+    cookie = res.headers
+      .getSetCookie()
+      .map((c) => c.split(";")[0])
+      .join("; ");
     expect(cookie).not.toBe("");
 
     const [u] = await db.select({ id: user.id }).from(user).where(eq(user.email, "it@example.com"));
     expect(u).toBeDefined();
-    const [p] = await db.select().from(profiles).where(eq(profiles.userId, u!.id));
+    expect(u).not.toBeNull();
+    const [p] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, u?.id ?? ""));
     expect(p?.locale).toBe("ko");
   });
 

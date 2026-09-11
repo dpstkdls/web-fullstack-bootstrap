@@ -1,8 +1,8 @@
-import type { ProjectDto } from "@repo/features/projects";
+import type { ProjectDto, ProjectPage } from "@repo/features/projects";
 import { AppError } from "@repo/lib/errors";
 import { describe, expect, it } from "vitest";
 import type { Context, ProfileService, ProjectService } from "./context";
-import { appRouter, createCaller } from "./root";
+import { createCaller } from "./root";
 
 const now = new Date();
 const FAKE_PROJECT: ProjectDto = {
@@ -94,7 +94,7 @@ describe("appRouter", () => {
               page: 1,
               pageSize: 20,
               dbInternal: "leak",
-            }) as any,
+            }) as unknown as ProjectPage,
         },
       }),
     );
