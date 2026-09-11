@@ -30,4 +30,10 @@ test("signup → create → list → delete project", async ({ page }) => {
     .click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.getByRole("link", { name: projectName })).toHaveCount(0);
+
+  await page.goto("/settings");
+  await page.getByRole("combobox").last().click();
+  await page.getByRole("option", { name: "English" }).click();
+  // CardTitle renders a plain <div> (no heading role) — assert on it directly instead of getByRole("heading")
+  await expect(page.locator('[data-slot="card-title"]')).toHaveText("Settings");
 });
