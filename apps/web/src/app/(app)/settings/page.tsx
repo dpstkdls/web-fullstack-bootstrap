@@ -13,7 +13,7 @@ import {
 } from "@repo/ui/components/select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { setLocaleCookie } from "@/app/actions/locale";
 import { useTRPC } from "@/trpc/react";
@@ -21,6 +21,7 @@ import { useTRPC } from "@/trpc/react";
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const tc = useTranslations("common");
+  const locale = useLocale();
   const trpc = useTRPC();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -62,7 +63,7 @@ export default function SettingsPage() {
         <div className="space-y-2">
           <Label>{t("locale")}</Label>
           <Select
-            value={profile.data.locale}
+            value={locale}
             onValueChange={(locale) => update.mutate({ locale: locale as "ko" | "en" })}
           >
             <SelectTrigger className="w-40">
