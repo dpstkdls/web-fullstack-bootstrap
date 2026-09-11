@@ -9,8 +9,8 @@ export class ProfileService {
     private readonly repo: ProfileRepository,
   ) {}
 
-  // 가입 훅에서 호출. better-auth가 user insert를 소유하므로 user와의 완전한 단일 트랜잭션은
-  // 불가 — 존재확인+생성을 한 트랜잭션으로 묶어 중복 생성만 방지한다 (tx 주입 패턴 시연).
+  // 가입 훅과 profile.get(자가 치유)에서 호출. tx로 존재확인+생성을 묶어 동시 호출 시의
+  // 원자성을 보장하고, 최종 중복 방지선은 profiles 테이블의 PK(userId) 제약이 맡는다.
   async ensureProfile(userId: string): Promise<ProfileDto> {
     return this.db.transaction(async (tx) => {
       const existing = await this.repo.findByUserId(userId, tx);

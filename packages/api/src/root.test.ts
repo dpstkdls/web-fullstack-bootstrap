@@ -69,7 +69,7 @@ describe("appRouter", () => {
     const caller = createCaller(
       ctxWith({
         profiles: {
-          getByUserId: async (userId: string) => ({
+          ensureProfile: async (userId: string) => ({
             userId,
             displayName: null,
             locale: "ko",
