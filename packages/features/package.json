@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./projects": "./projects/index.ts"
+    "./projects": "./projects/index.ts",
+    "./profiles": "./profiles/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
