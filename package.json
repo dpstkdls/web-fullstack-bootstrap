@@ -14,7 +14,7 @@
     "test:integration": "turbo run test:integration",
     "db:up": "pnpm --filter @repo/db db:up",
     "db:migrate": "pnpm --filter @repo/db db:migrate",
-    "db:seed": "pnpm --filter @repo/db db:seed",
+    "db:seed": "pnpm --filter @repo/db db:seed && pnpm --filter api seed",
     "prepare": "husky"
   },
   "devDependencies": {
