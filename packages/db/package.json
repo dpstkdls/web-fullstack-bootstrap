@@ -6,7 +6,8 @@
   "exports": {
     "./schema": "./src/schema.ts",
     "./client": "./src/client.ts",
-    "./migrate": "./src/migrate.ts"
+    "./migrate": "./src/migrate.ts",
+    "./auth-schema": "./src/auth-schema.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
