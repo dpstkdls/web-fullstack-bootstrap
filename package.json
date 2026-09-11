@@ -12,6 +12,7 @@
     "lint:fix": "biome check --write .",
     "test": "turbo run test",
     "test:integration": "turbo run test:integration",
+    "e2e": "pnpm db:up && pnpm db:migrate && pnpm --filter e2e exec playwright test",
     "db:up": "pnpm --filter @repo/db db:up",
     "db:migrate": "pnpm --filter @repo/db db:migrate",
     "db:seed": "pnpm --filter @repo/db db:seed && pnpm --filter api seed",
