@@ -7,10 +7,16 @@ import {
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
+const projectPageSchema = z.object({
+  items: z.array(projectDtoSchema),
+  total: z.number().int(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
+});
+
 export const projectsRouter = router({
   list: protectedProcedure.input(listProjectsQuerySchema).query(async ({ ctx, input }) => {
-    const page = await ctx.services.projects.list(input);
-    return { ...page, items: page.items.map((item) => projectDtoSchema.parse(item)) };
+    return projectPageSchema.parse(await ctx.services.projects.list(input));
   }),
 
   byId: protectedProcedure.input(z.object({ id: z.uuid() })).query(async ({ ctx, input }) => {

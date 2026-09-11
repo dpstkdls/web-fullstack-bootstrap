@@ -82,4 +82,25 @@ describe("appRouter", () => {
     const profile = await caller.profile.get();
     expect(profile.userId).toBe("u1");
   });
+
+  it("enforces envelope boundary: extra fields on list result never leak", async () => {
+    const caller = createCaller(
+      ctxWith({
+        projects: {
+          list: async () =>
+            ({
+              items: [FAKE_PROJECT],
+              total: 1,
+              page: 1,
+              pageSize: 20,
+              dbInternal: "leak",
+            }) as any,
+        },
+      }),
+    );
+    const result = await caller.projects.list({ page: 1, pageSize: 20 });
+    expect(result).not.toHaveProperty("dbInternal");
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0]?.name).toBe("Alpha");
+  });
 });
