@@ -1,0 +1,38 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5",
+    "@repo/features": "workspace:*",
+    "@repo/i18n": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@tanstack/react-query": "^5",
+    "@trpc/client": "^11",
+    "@trpc/tanstack-react-query": "^11",
+    "better-auth": "^1",
+    "next": "^15",
+    "next-intl": "^4",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-hook-form": "^7",
+    "superjson": "^2",
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@repo/api": "workspace:*",
+    "@repo/config": "workspace:*",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

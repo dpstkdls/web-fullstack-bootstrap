@@ -5,7 +5,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "pnpm db:up && turbo run dev",
     "build": "turbo run build",
     "type-check": "turbo run type-check",
     "lint": "biome check .",

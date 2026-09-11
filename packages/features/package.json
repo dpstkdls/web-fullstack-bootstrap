@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     "./projects": "./projects/index.ts",
-    "./profiles": "./profiles/index.ts"
+    "./projects/dto": "./projects/dto.ts",
+    "./profiles": "./profiles/index.ts",
+    "./profiles/dto": "./profiles/dto.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
