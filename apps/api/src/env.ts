@@ -9,3 +9,8 @@ export const env = parseEnv({
   BETTER_AUTH_URL: z.string().default("http://localhost:3001"),
   WEB_ORIGIN: z.string().default("http://localhost:3000"),
 });
+
+// dev 기본값은 DX용 — 운영에서 기본 시크릿으로 부팅하는 사고만은 여기서 차단
+if (process.env.NODE_ENV === "production" && env.BETTER_AUTH_SECRET === "dev-secret-change-me") {
+  throw new Error("BETTER_AUTH_SECRET must be set to a real secret in production");
+}

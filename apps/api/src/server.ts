@@ -27,9 +27,11 @@ export async function buildServer(deps: { db: Db; auth: Auth }) {
       });
       const response = await deps.auth.handler(req);
       reply.status(response.status);
+      const setCookies = response.headers.getSetCookie();
       response.headers.forEach((value, key) => {
-        reply.header(key, value);
+        if (key.toLowerCase() !== "set-cookie") reply.header(key, value);
       });
+      if (setCookies.length > 0) reply.header("set-cookie", setCookies);
       reply.send(response.body ? await response.text() : null);
     },
   });
