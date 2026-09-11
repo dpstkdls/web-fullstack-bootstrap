@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "Web Seed",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "logout": "Log out"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "signupTitle": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "submitLogin": "Log in",
+    "submitSignup": "Sign up",
+    "toSignup": "No account? Sign up",
+    "toLogin": "Already have an account? Log in",
+    "failed": "Authentication failed"
+  },
+  "projects": {
+    "title": "Projects",
+    "new": "New project",
+    "newTitle": "New project",
+    "editTitle": "Edit project",
+    "name": "Name",
+    "description": "Description",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusArchived": "Archived",
+    "statusAll": "All",
+    "searchPlaceholder": "Search by name…",
+    "empty": "No projects yet",
+    "prev": "Prev",
+    "next": "Next",
+    "pageInfo": "Page {page} / {totalPages}",
+    "deleteConfirm": "Delete this project? This cannot be undone.",
+    "createdAt": "Created"
+  },
+  "settings": {
+    "title": "Settings",
+    "displayName": "Display name",
+    "locale": "Language",
+    "saved": "Saved"
+  }
+}
