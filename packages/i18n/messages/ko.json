@@ -6,7 +6,8 @@
     "delete": "삭제",
     "edit": "수정",
     "loading": "불러오는 중…",
-    "logout": "로그아웃"
+    "logout": "로그아웃",
+    "settingsLink": "설정"
   },
   "auth": {
     "loginTitle": "로그인",

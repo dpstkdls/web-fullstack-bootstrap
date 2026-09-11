@@ -6,7 +6,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "loading": "Loading…",
-    "logout": "Log out"
+    "logout": "Log out",
+    "settingsLink": "Settings"
   },
   "auth": {
     "loginTitle": "Log in",
